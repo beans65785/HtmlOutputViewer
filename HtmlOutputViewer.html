@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Live Previewer</title>
+</head>
+<body>
+
+    <h1>HTML Render Lab</h1>
+    
+    <div>
+        <button id="clearBtn">Clear</button>
+        <button id="copyBtn">Copy Output</button>
+    </div>
+
+    <hr>
+
+    <div style="display: flex; gap: 20px;">
+        <!-- Input Side -->
+        <div style="flex: 1;">
+            <h3>HTML Input (<span id="charCount">0</span> characters)</h3>
+            <textarea id="htmlInput" style="width: 100%; height: 400px; font-family: monospace;" placeholder="Type your HTML here..."></textarea>
+        </div>
+
+        <!-- Output Side -->
+        <div style="flex: 1;">
+            <h3>Preview Output</h3>
+            <div id="previewOutput" style="border: 1px solid #ccc; padding: 10px; min-height: 400px;">
+                <!-- Rendered content goes here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const htmlInput = document.getElementById('htmlInput');
+        const previewOutput = document.getElementById('previewOutput');
+        const charCount = document.getElementById('charCount');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+
+        // The specific video file URL
+        const mov_kfp = "https://beans65785.github.io/videos/mov_kfp.mp4";
+
+        // Initial content with all CSS removed and video set to autoplay/loop (unmuted)
+        const initialContent = `<h3>Video Preview</h3>
+
+<video width="320" controls autoplay loop>
+    <source src="mov_kfp.mp4" type="video/mp4">
+</video>
+
+<p>The video is set to autoplay and loop with sound on.</p>`;
+
+        // Function to update the preview
+        function updatePreview() {
+            let content = htmlInput.value;
+            
+            // Replaces "mov_kfp.mp4" with the real variable value for the preview
+            const processedContent = content.split('mov_kfp.mp4').join(mov_kfp);
+            
+            previewOutput.innerHTML = processedContent;
+            charCount.textContent = content.length;
+        }
+
+        // Initialize with content
+        window.onload = () => {
+            htmlInput.value = initialContent;
+            updatePreview();
+        };
+
+        // Event listeners
+        htmlInput.addEventListener('input', updatePreview);
+
+        clearBtn.addEventListener('click', () => {
+            htmlInput.value = '';
+            updatePreview();
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = htmlInput.value;
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                console.error('Unable to copy', err);
+            }
+            document.body.removeChild(textArea);
+        });
+    </script>
+</body>
+</html>
